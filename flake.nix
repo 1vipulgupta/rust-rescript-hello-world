@@ -1,5 +1,5 @@
 {
-    description = "Will it work";
+    description = "Basic flake with mkDerivation";
     inputs = {
         nixpkgs = {
             url = "github:NixOS/nixpkgs";
@@ -10,12 +10,11 @@
     outputs = {self, nixpkgs, ...}: let
     pkgs = nixpkgs.legacyPackages.x86_64-linux;
     in
-    # inputs.flake-parts.lib.mkFlake { inherit inputs; }
     {
         foo = "bar";
         packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
         packages.x86_64-linux.mkderivatio = pkgs.stdenv.mkDerivation {
-                                                                    name = "rust-flake";
+                                                                    name = "main";
                                                                     builder = "${pkgs.bash}/bin/bash";
                                                                     args = [ ./builder.sh ];
                                                                     inherit (pkgs) rustc coreutils cowsay hello;
@@ -24,15 +23,15 @@
                                                                     PATH = "${pkgs.coreutils}/bin:${pkgs.rustc}/bin:${pkgs.gcc}/bin";
                                                                 };
         packages.x86_64-linux.default = self.packages.x86_64-linux.mkderivatio; #need to point it to rust, so can build rust by default.
-        devShells.default = nixpkgs.mkShell {
-            packages = [ pkgs.rustc pkgs.coreutils ];
+        # devShells.default = nixpkgs.mkShell {
+        #     packages = [ pkgs.rustc pkgs.coreutils ];
 
-            inputsFrom = [ ];
+        #     inputsFrom = [ ];
 
-            shellHook = ''
-                export DEBUG=1
-                rustc hello.rs
-            '';
-        };
+        #     shellHook = ''
+        #         export DEBUG=1
+        #         rustc hello.rs
+        #     '';
+        # };
     };
 }

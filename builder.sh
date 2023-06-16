@@ -1,3 +1,4 @@
 mkdir $out
 cd $out
-rustc $src/hello.rs
+mkdir bin && cd bin
+rustc $src/main.rs
